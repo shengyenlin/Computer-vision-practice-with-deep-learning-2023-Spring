@@ -1,0 +1,5 @@
+ckpt/*
+hw1_dataset/*
+__pycache__/*
+pretrained_models/*
+mmdetection/*
