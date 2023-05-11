@@ -1,0 +1,8 @@
+cache/*
+hw3_dataset/*
+hw3_dataset_copy/*
+inference/*
+models/*
+prediction/*
+backbone_tsv/*
+deprecated/*
