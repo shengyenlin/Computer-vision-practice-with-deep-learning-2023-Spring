@@ -6,3 +6,14 @@ models/*
 prediction/*
 backbone_tsv/*
 deprecated/*
+prediction/*
+backbone_tsv/*
+adapted_models/*
+ds_clear_val/*
+ds_fog_pub_test/*
+ds_fog_val/*
+report/*
+source_model/*
+*.pth
+*.png
+*.json

@@ -36,7 +36,7 @@ MODEL:
   TEACHER_ALPHA: 0.9
 DATASETS:
   TRAIN: ("cvdpl_hw3_org_train_cocostyle",)
-  TEST: ("cvdpl_hw3_org_val_cocostyle",)
+  TEST: ("cvdpl_hw3_dummy_coco_test",)
 INPUT:
   MIN_SIZE_TRAIN: (800,)
   MAX_SIZE_TRAIN: 1600
@@ -45,7 +45,7 @@ INPUT:
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:
-  CHECKPOINT_PERIOD: 2000
+  CHECKPOINT_PERIOD: 1000
   BASE_LR: 0.0025
   WEIGHT_DECAY: 0.0001
   STEPS: (30000, 40000)

@@ -14,7 +14,7 @@ from ..utils.comm import is_main_process
 from ..utils.comm import all_gather
 from ..utils.comm import synchronize
 
-def compute_on_dataset(dataset, model, data_loader, device, testing=False):
+def compute_on_dataset(dataset, model, data_loader, device, save_back_bone=False):
     model.eval()
     results_dict = {}
     cpu_device = torch.device("cpu")
@@ -25,7 +25,7 @@ def compute_on_dataset(dataset, model, data_loader, device, testing=False):
         with torch.no_grad():
             output, backbone_features = model(images)
             output = [o.to(cpu_device) for o in output]
-            if testing:
+            if save_back_bone:
                 backbone_features_list.append(
                     # choose the lowest level feature map
                     # [1, 256, 13, 25] -> [1, 256*13*25]
@@ -42,11 +42,9 @@ def compute_on_dataset(dataset, model, data_loader, device, testing=False):
             {img_id: result for img_id, result in zip(image_ids, output)}
         )
 
-    if testing:
-        # backbone_features_np = np.array(backbone_features_list)
-        # print(backbone_features_np)
+    if save_back_bone:
         np.savetxt(
-            'backbone_features_adapted_foggy.tsv', 
+            'backbone_features_source_clear.tsv', 
             backbone_features_list,
             delimiter='\t'
             )
@@ -85,7 +83,8 @@ def inference(
         expected_results=(),
         expected_results_sigma_tol=4,
         output_path=None,
-        testing=False
+        testing=False,
+        save_back_bone=False,
 ):
     # convert to a torch.device for efficiency
     device = torch.device(device)
@@ -101,7 +100,7 @@ def inference(
     
     #### The prediction output #####
     # prediction: dict_keys(['boxes', 'labels', 'scores', 'masks', 'keypoints', 'img_info'])
-    predictions = compute_on_dataset(dataset, model, data_loader, device, testing=testing)
+    predictions = compute_on_dataset(dataset, model, data_loader, device, save_back_bone=save_back_bone)
     #### The prediction output #####
 
     # wait for all processes to complete before measuring the time
@@ -118,9 +117,6 @@ def inference(
     if not is_main_process():
         return
 
-    # TODO: save the file to json format
-    # each prediction contains: labels, boxes [xmin, ymin, xmax, ymax], and scores
-    # key should be "[subdirectories/****.png]"
     if output_path:
         out_json = dict()
 

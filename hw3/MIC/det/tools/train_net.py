@@ -73,6 +73,7 @@ def train(cfg, local_rank, distributed, output_dir):
     checkpointer = DetectronCheckpointer(
         cfg, model, optimizer, scheduler, output_dir, save_to_disk
     )
+
     extra_checkpoint_data = checkpointer.load(cfg.MODEL.WEIGHT)
     arguments.update(extra_checkpoint_data)
     # arguments["iteration"] = 0
@@ -174,11 +175,11 @@ def test(cfg, model, distributed, output_path=None):
     output_folders = [None] * len(cfg.DATASETS.TEST)
     dataset_names = cfg.DATASETS.TEST
 
-    if output_dir:
+    if output_path:
     # if cfg.OUTPUT_DIR:
         for idx, dataset_name in enumerate(dataset_names):
             output_folder = os.path.join(
-                output_dir,
+                output_path,
                 # cfg.OUTPUT_DIR, 
                 "inference", 
                 dataset_name
@@ -242,6 +243,13 @@ def main():
     )
 
     parser.add_argument(
+        "--hw_output_dir",
+        type=Path,
+        help="Directory to stored the model",
+        default=None
+    )
+
+    parser.add_argument(
         "--mode",
         type=str,
         choices=["source_only", "source_with_da"],
@@ -251,11 +259,11 @@ def main():
     args = parser.parse_args()
 
     if args.mode == "source_only":
+        args.config_file = "source_only_model.yaml"
         mode = "source_only"
-        args.config_file = "train_sour_only_model.yaml"
-    elif args.model == "source_with_da":
+    elif args.mode == "source_with_da":
         mode = "source_with_da"
-        args.config_file = "train_source_model_with_da.yaml"
+        args.config_file = "source_model_with_da.yaml"
 
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
     args.distributed = num_gpus > 1
@@ -274,14 +282,16 @@ def main():
     # set output dir
     run_id = int(time.time())
     date = datetime.date.today().strftime("%m%d")
-    print(f"Run id = {run_id}, mode = {mode}")
+    print(f"Run id = {run_id}, mode = {args.mode}")
 
-    output_dir = args.output_dir / str(mode) / str(date) / str(run_id)
+    if args.hw_output_dir is not None: # for homework upload
+        output_dir = args.hw_output_dir
+    else: # for experiment
+        output_dir = args.output_dir / str(args.mode) / str(date) / str(run_id)
+
+    print(f"Output dir = {output_dir}")
+
     Path(output_dir).mkdir(parents=True, exist_ok=True)
-
-    # output_dir = cfg.OUTPUT_DIR
-    # if output_dir:
-    #     mkdir(output_dir)
 
     logger = setup_logger("maskrcnn_benchmark", output_dir, get_rank())
     logger.info("Using {} GPUs".format(num_gpus))

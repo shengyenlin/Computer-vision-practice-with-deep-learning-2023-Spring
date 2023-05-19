@@ -53,7 +53,12 @@ def do_train(
     model.train()
     start_training_time = time.time()
     end = time.time()
+
     for iteration, (images, targets, _) in enumerate(data_loader, start_iter):
+        if iteration == 0:
+            print("save model without any training")
+            checkpointer.save("model_{:07d}".format(iteration), **arguments)
+
         data_time = time.time() - end
         iteration = iteration + 1
         arguments["iteration"] = iteration
@@ -62,6 +67,8 @@ def do_train(
 
         images = images.to(device)
         targets = [target.to(device) for target in targets]
+
+        print("targets", type(targets), targets)
 
         loss_dict = model(images, targets)
 
@@ -135,6 +142,9 @@ def do_da_train(
     start_training_time = time.time()
     end = time.time()
     for iteration, ((source_images, source_targets, idx1), (target_images, target_targets, idx2)) in enumerate(zip(source_data_loader, target_data_loader), start_iter):
+        if iteration == 0:
+            print("save model without any training")
+            checkpointer.save("model_{:07d}".format(iteration), **arguments)
         data_time = time.time() - end
         arguments["iteration"] = iteration
 
@@ -223,6 +233,9 @@ def do_mask_da_train(
     start_training_time = time.time()
     end = time.time()
     for iteration, ((source_images, source_targets, idx1), (target_images, target_targets, idx2)) in enumerate(zip(source_data_loader, target_data_loader), start_iter):
+        if iteration == 0:
+            print("save model without any training")
+            checkpointer.save("model_{:07d}".format(iteration), **arguments)
         data_time = time.time() - end
         arguments["iteration"] = iteration
 
@@ -237,7 +250,12 @@ def do_mask_da_train(
         masked_target_images = masking(target_images.tensors.clone().detach()).detach()
         model_teacher.update_weights(model, iteration)
         target_output = model_teacher(target_images)
-        target_pseudo_labels, pseudo_masks = process_pred2label(target_output, threshold=cfg.MODEL.PSEUDO_LABEL_THRESHOLD)
+
+        target_pseudo_labels, pseudo_masks = process_pred2label(
+            # target_output, 
+            target_output[0],
+            threshold=cfg.MODEL.PSEUDO_LABEL_THRESHOLD
+            )
 
         record_dict = model(images, targets)
 

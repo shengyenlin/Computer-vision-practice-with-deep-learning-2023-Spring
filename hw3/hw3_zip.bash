@@ -1,0 +1,15 @@
+zip -r hw3_r11922a05.zip ./ \
+    -x "adapted_model_from_source_model/*" \
+    -x "adapted_models/*" \
+    -x "adapted_models_test/*" \
+    -x "backbone_tsv/*" \
+    -x "cache/*" \
+    -x "deprecated/*" \
+    -x "ds_clear_val/*" \
+    -x "ds_fog_pub_test/*" \
+    -x "ds_fog_val/*" \
+    -x "hw3_dataset/*" \
+    -x "models/*" \
+    -x "prediction/*" \
+    -x "report/*" \
+    -x "hw3_zip.bash";

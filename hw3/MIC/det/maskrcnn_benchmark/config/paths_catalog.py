@@ -32,6 +32,10 @@ class DatasetCatalog(object):
             "img_dir": None,
             "ann_file": None
         },
+        "cvdpl_hw3_dummy_coco_test": {
+            "img_dir": None,
+            "ann_file": None
+        },
         #### Original Code ####
         "coco_2017_train": {
             "img_dir": "coco/train2017",

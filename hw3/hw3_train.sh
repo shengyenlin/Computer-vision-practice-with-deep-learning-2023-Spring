@@ -1,0 +1,1 @@
+python3 ./MIC/det/tools/train_net.py --mode source_with_da --hw_output_dir ./adapted_model

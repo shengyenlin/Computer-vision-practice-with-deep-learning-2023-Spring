@@ -49,7 +49,6 @@ class GeneralizedRCNN(nn.Module):
             raise ValueError("In training mode, targets should be passed")
         images = to_image_list(images)
 
-        # TODO: extract this out
         features = self.backbone(images.tensors)
 
         proposals, proposal_losses = self.rpn(images, features, targets, use_pseudo_labeling_weight=use_pseudo_labeling_weight)
@@ -75,4 +74,5 @@ class GeneralizedRCNN(nn.Module):
                 losses.update(da_losses)
             return losses
 
+        # return result
         return result, features

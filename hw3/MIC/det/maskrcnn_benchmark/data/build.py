@@ -41,13 +41,15 @@ def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True, is_s
             args["use_difficult"] = not is_train
         args["transforms"] = transforms
         args["is_source"] = is_source
-        # make dataset from factory
+        
 
         if data["factory"] == "COCOTestingDataset":
+            print("Correct test the testing dataset.")
             args["root"] = test_img_dir
             del args["ann_file"]
             del args["remove_images_without_annotations"]
 
+        # make dataset from factory
         dataset = factory(**args)
         datasets.append(dataset)
         

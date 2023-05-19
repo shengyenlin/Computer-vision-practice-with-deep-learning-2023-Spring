@@ -38,6 +38,8 @@ def main():
     parser.add_argument("--out_json_path", type=str)
     parser.add_argument("--weight_percentage", type=int, default=3)
     parser.add_argument("--model_path", type=str, default="./cache/best/model_final.pth")
+    parser.add_argument("--save_back_bone", action="store_true")
+    parser.add_argument("--model_prefix_dir", type=str)
 
     args = parser.parse_args()
 
@@ -73,20 +75,21 @@ def main():
         model_prefix_dir = "models/source_with_da"
     elif args.config_file == "source_only_model.yaml":
         model_prefix_dir = "models/source_without_da"
+    
+    if args.weight_percentage == -1: # self-defined model path
+        model_path = args.model_path
+    else:
+        if args.weight_percentage == 0:
+            model_name = "model_0_percentage.pth"
+        elif args.weight_percentage == 1:
+            model_name = "model_33_percentage.pth"
+        elif args.weight_percentage == 2:
+            model_name = "model_66_percentage.pth"
+        elif args.weight_percentage == 3:
+            model_name = "model_100_percentage.pth"
+        model_path = os.path.join(args.model_prefix_dir, model_name)
 
-    if args.weight_percentage == 0:
-        model_name = "model_0_percentage.pth"
-    elif args.weight_percentage == 1:
-        model_name = "model_33_percentage.pth"
-    elif args.weight_percentage == 2:
-        model_name = "model_66_percentage.pth"
-    if args.weight_percentage == 3:
-        model_name = "model_100_percentage.pth"
-
-    # TODO: modify when uploading homework
-    # model_path = os.path.join(model_prefix_dir, model_name)
-    model_path = args.model_path
-
+    print("Load model from:", model_path)
     _ = checkpointer.load(model_path)
 
     iou_types = ("bbox",)
@@ -120,7 +123,8 @@ def main():
             expected_results=cfg.TEST.EXPECTED_RESULTS,
             expected_results_sigma_tol=cfg.TEST.EXPECTED_RESULTS_SIGMA_TOL,
             output_path=args.out_json_path,
-            testing=True
+            testing=True,
+            save_back_bone=args.save_back_bone,
         )
         synchronize()
 
