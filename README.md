@@ -18,9 +18,7 @@ Professor: [Wen-Huang Cheng](http://aimmlab.nctu.edu.tw/whcheng/index_ch.html), 
 - Multimodal Learning for Generation
 - Conditional Generative Models
 
-
-
-
 ## Homework assignments
 - HW1: Object detection
-
+- HW2: Handwriting assigment on faster convolution, pruning and depthwise separable convolutions
+- HW3: Object detection with unsupervised domain adaptation
