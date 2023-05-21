@@ -87,6 +87,8 @@ def main():
             model_name = "model_66_percentage.pth"
         elif args.weight_percentage == 3:
             model_name = "model_100_percentage.pth"
+        elif args.weight_percentage == 4:
+            model_name = "model_100_percentage.pth"
         model_path = os.path.join(args.model_prefix_dir, model_name)
 
     print("Load model from:", model_path)

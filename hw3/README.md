@@ -80,7 +80,8 @@ bash hw3_inference.sh [--test_target_img_dir] [--output_json_path] [--checkpoint
 - test_target_img_dir: directory to testing target images
 - output_json_path: path to predicted object detection json file
 - checkpoint_number: one of the numbers between 0 and 3, specifying which checkpoint to use, e.g., 0 indicates the 0% checkpoint, and 3 indicates the 100% checkpoint.
-  - if you want to use weights other than the default 4 checkpoint_number, set the checkpoint_number to -1 and use `--model_path` flag to specify your model path, and directory run the py file in command line.
+  - If you want to use the best model to inference, please use 4 as the check point number. In my case, the best model is the 100% checkpoint model.
+  - If you want to use weights other than the default 4 checkpoint_number, set the checkpoint_number to -1 and use `--model_path` flag to specify your model path, and directory run the py file in command line.
 
 E.g.
 ```bash
